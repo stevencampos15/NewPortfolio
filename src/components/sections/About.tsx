@@ -1,9 +1,9 @@
 "use client"
 
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useLanguage } from "@/context/LanguageContext"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 
 // Function to calculate age
 const calculateAge = (birthDate: Date): number => {
@@ -577,30 +577,6 @@ const LearningIcon = () => {
   )
 }
 
-// Counter Animation Component
-const AnimatedCounter = ({ value, duration = 2, initialValue = 0 }: { value: number, duration?: number, initialValue?: number }) => {
-  const [count, setCount] = useState(initialValue)
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.5
-  })
-  
-  useEffect(() => {
-    if (!inView) return
-    
-    if (count < value) {
-      const step = Math.max(1, Math.floor(value / (duration * 60)))
-      const timer = setTimeout(() => {
-        setCount(prev => Math.min(prev + step, value))
-      }, 1000/60)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [count, value, duration, inView])
-  
-  return <span ref={ref}>{count}</span>
-}
-
 // Background particle component with client-side only rendering
 const Particles = () => {
   // Use useEffect to render particles only after component mounts on client
@@ -704,7 +680,7 @@ export default function About() {
     
     // Start the daily update cycle
     return updateCoffeeCountDaily()
-  }, [])
+  }, [birthDate, baseCoffeeDate, baseCoffeeCount])
 
   return (
     <section id="about" className="w-full py-20 bg-background relative overflow-hidden">

@@ -18,14 +18,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const t = (key: string) => {
     const keys = key.split('.')
-    let value: any = translations[language]
+    let value: Record<string, unknown> | string | undefined = translations[language]
     
     for (const k of keys) {
-      if (value === undefined) return key
-      value = value[k]
+      if (value === undefined || typeof value === 'string') return key
+      value = value[k] as Record<string, unknown> | string | undefined
     }
     
-    return value || key
+    return value as string || key
   }
 
   return (

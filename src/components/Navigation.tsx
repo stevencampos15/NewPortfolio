@@ -7,7 +7,7 @@ import { useTheme } from "next-themes"
 
 export default function Navigation() {
   const { t } = useLanguage()
-  const { theme } = useTheme()
+  const { } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
