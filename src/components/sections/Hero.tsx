@@ -57,7 +57,7 @@ export default function Hero() {
             {/* Hello text */}
             <div className="w-full lg:w-1/2">
               <motion.h1 
-                className="text-[11rem] md:text-[12rem] font-bold tracking-tighter text-foreground leading-none"
+                className="text-[30vw] md:text-[7rem] lg:text-[9rem] xl:text-[11rem] font-bold tracking-tighter text-foreground leading-none"
                 initial={{ opacity: 0, y: 30 }}
                 animate={controls}
                 transition={{ duration: 0.8 }}

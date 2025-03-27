@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section className="relative flex min-h-[90vh] flex-col items-center justify-center px-4 py-24 md:px-6">
       <div className="container flex max-w-4xl flex-col items-center gap-4 text-center">
-        <h1 className="animate-fade-up text-base font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl/none">
+        <h1 className="animate-fade-up text-[0.5rem] font-bold tracking-tighter sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl/none">
           Hello, I&apos;m{" "}
           <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Steven Campos
