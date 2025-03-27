@@ -31,7 +31,7 @@ const TypeAnimation = ({ text, className }: { text: string, className?: string }
   return (
     <span className={className}>
       {displayText}
-      <span className={`inline-block w-[0.05em] h-[1.2em] ml-2 bg-white ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}></span>
+      <span className={`inline-block w-[0.05em] h-[1.2em] ml-2 bg-black dark:bg-white ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}></span>
     </span>
   )
 }
