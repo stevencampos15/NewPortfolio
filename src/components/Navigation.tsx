@@ -67,6 +67,7 @@ export default function Navigation() {
     { href: "#about", label: t('nav.about') },
     { href: "#timeline", label: t('timeline.title') },
     { href: "#skills", label: t('nav.skills') },
+    { href: "#certifications", label: t('certifications.title') },
     { href: "#projects", label: t('nav.projects') },
     { href: "#contact", label: t('nav.contact') }
   ]

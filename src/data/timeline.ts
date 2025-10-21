@@ -7,7 +7,7 @@ export interface TimelineItem {
 
 export const timelineData: TimelineItem[] = [
   {
-    date: "2014",
+    date: "2013-2014",
     title: "Systems Engineering Technician",
     description: "Completed my technical degree in Systems Engineering, where I gained strong foundations in software development, databases, and networking.",
     skills: ["Java", "SQL", "Networking", "Systems Analysis"],
