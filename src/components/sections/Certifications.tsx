@@ -69,7 +69,7 @@ export default function Certifications() {
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h2 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight">
+              <h2 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight">
                 {t('certifications.title')}
               </h2>
             </motion.div>
