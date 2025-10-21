@@ -3,38 +3,15 @@
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useLanguage } from "@/context/LanguageContext"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { translations } from "@/i18n/translations"
 
-const skills = [
-  // Frontend
-  { name: "React", level: "Advanced", category: "Frontend" },
-  { name: "Next.js", level: "Advanced", category: "Frontend" },
-  { name: "TailwindCSS", level: "Advanced", category: "Frontend" },
-  { name: "HTML/CSS", level: "Advanced", category: "Frontend" },
-  { name: "JavaScript", level: "Advanced", category: "Frontend" },
-  
-  // Backend
-  { name: "Node.js", level: "Advanced", category: "Backend" },
-  { name: "Express.js", level: "Advanced", category: "Backend" },
-  { name: "Python", level: "Intermediate", category: "Backend" },
-  { name: "RESTful APIs", level: "Advanced", category: "Backend" },
-  { name: "GraphQL", level: "Intermediate", category: "Backend" },
-  
-  // Database
-  { name: "SQL", level: "Advanced", category: "Database" },
-  { name: "MongoDB", level: "Intermediate", category: "Database" },
-  { name: "PostgreSQL", level: "Advanced", category: "Database" },
-  { name: "Redis", level: "Intermediate", category: "Database" },
-  
-  // DevOps & Tools
-  { name: "Git", level: "Advanced", category: "DevOps" },
-  { name: "Docker", level: "Intermediate", category: "DevOps" },
-  { name: "AWS", level: "Intermediate", category: "DevOps" },
-  { name: "CI/CD", level: "Intermediate", category: "DevOps" },
-]
-
-// Get unique categories from skills
-const categories = Array.from(new Set(skills.map(skill => skill.category)))
+// Map level strings (EN/ES) to bar widths
+const levelWidthClass = (level: string) => {
+  if (level === "Advanced" || level === "Avanzado") return "w-full"
+  if (level === "Intermediate" || level === "Intermedio") return "w-2/3"
+  return "w-1/3"
+}
 
 export default function Skills() {
   const [ref, inView] = useInView({
@@ -42,10 +19,20 @@ export default function Skills() {
     threshold: 0.1,
   })
 
-  const { t } = useLanguage()
-  const [activeTab, setActiveTab] = useState(categories[0])
+  const { t, language } = useLanguage()
+  const groups = translations[language].skills?.groups as Record<string, { name: string; level: string }[]>
 
-  const filteredSkills = skills.filter(skill => skill.category === activeTab)
+  const categories = useMemo(() => Object.keys(groups || {}), [groups])
+  const [activeTab, setActiveTab] = useState<string>(categories[0])
+
+  // Reset tab on language change or when categories change
+  useEffect(() => {
+    if (!categories.includes(activeTab)) {
+      setActiveTab(categories[0])
+    }
+  }, [language, categories, activeTab])
+
+  const filteredSkills = useMemo(() => (groups?.[activeTab] || []), [groups, activeTab])
 
   return (
     <section id="skills" className="w-full py-20 bg-background">
@@ -101,10 +88,7 @@ export default function Skills() {
                 <div className="mt-2">
                   <div className="h-2 bg-muted rounded-full">
                     <div 
-                      className={`h-full bg-[#9CB7C9] rounded-full ${
-                        skill.level === "Advanced" ? "w-full" : 
-                        skill.level === "Intermediate" ? "w-2/3" : "w-1/3"
-                      }`}
+                      className={`h-full bg-[#9CB7C9] rounded-full ${levelWidthClass(skill.level)}`}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{skill.level}</p>

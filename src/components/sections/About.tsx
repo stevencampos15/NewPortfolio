@@ -652,7 +652,7 @@ export default function About() {
   const initialCoffeeCount = calculateCoffeeCups(baseCoffeeDate, baseCoffeeCount)
   const [coffeeCount, setCoffeeCount] = useState<number>(initialCoffeeCount)
   
-  const yearsExperience = 5 // You can adjust this
+  const yearsExperience = "5+" // You can adjust this
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
