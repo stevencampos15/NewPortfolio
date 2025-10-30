@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, animate, useMotionValue } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useLanguage } from "@/context/LanguageContext"
 import { useEffect, useState } from "react"
@@ -32,7 +32,7 @@ const calculateCoffeeCups = (startDate: Date, baseCups: number): number => {
   return baseCups + diffDays
 }
 
-// Coffee Cup SVG Component
+// Coffee Cup SVG Component (with gentle float/tilt and soft glow)
 const CoffeeCup = () => {
   const [mounted, setMounted] = useState(false)
   
@@ -41,366 +41,210 @@ const CoffeeCup = () => {
   }, [])
   
   return (
-    <div className="relative w-20 h-20 mx-auto mb-4">
+    <motion.div
+      className="relative w-20 h-20 mx-auto mb-4"
+      animate={{ y: [0, -2, 0], rotate: [0, -1.2, 0] }}
+      transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+    >
       <svg viewBox="0 0 100 100" className="w-full h-full">
+        <defs>
+          {/* Soft drop shadow */}
+          <filter id="cupShadow" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.25" />
+          </filter>
+          {/* Clay-style gradients */}
+          <linearGradient id="mugGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="100%" stopColor="#E9E9E9" />
+          </linearGradient>
+          <radialGradient id="rimGrad" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+            <stop offset="80%" stopColor="#E6E6E6" stopOpacity="1" />
+          </radialGradient>
+          <linearGradient id="coffeeGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#8C5A37" />
+            <stop offset="100%" stopColor="#5E3A22" />
+          </linearGradient>
+          <linearGradient id="saucerGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="100%" stopColor="#EDEDED" />
+          </linearGradient>
+        </defs>
+
+        {/* Saucer (under cup) */}
+        <ellipse cx="50" cy="86" rx="34" ry="6" fill="url(#saucerGrad)" filter="url(#cupShadow)" />
+
         {/* Cup body */}
-        <path
-          d="M20,30 L20,70 Q20,85 35,85 L65,85 Q80,85 80,70 L80,30 Q80,30 75,30 L25,30 Q20,30 20,30 Z"
-          fill="#FFFFFF"
-          stroke="#DDDDDD"
-          strokeWidth="2"
-        />
+        <g filter="url(#cupShadow)">
+          <path
+            d="M22,32 L22,68 Q22,84 38,84 L62,84 Q78,84 78,68 L78,32 Q78,28 74,28 L26,28 Q22,28 22,32 Z"
+            fill="url(#mugGrad)"
+          />
+          {/* Rim */}
+          <ellipse cx="50" cy="32" rx="28" ry="7" fill="url(#rimGrad)" />
+          {/* Coffee liquid with gentle ripple */}
+          <motion.ellipse
+            cx="50"
+            cy="34"
+            rx="25"
+            ry="6"
+            fill="url(#coffeeGrad)"
+            animate={{ ry: [6, 5.4, 6], rx: [25, 24.5, 25] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Inner shadow at top */}
+          <ellipse cx="50" cy="30" rx="26" ry="5" fill="#000" opacity="0.06" />
+        </g>
+
+        {/* Handle */}
+        <g filter="url(#cupShadow)">
+          <path
+            d="M78,42 C88,42 92,48 92,56 C92,64 88,70 78,70"
+            fill="none"
+            stroke="#F2F2F2"
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M78,45 C85,45 88.5,49 88.5,56 C88.5,63 85,66.5 78,66.5"
+            fill="none"
+            stroke="#D9D9D9"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </g>
+        {/* Soft glow on saucer */}
+        {mounted && (
+          <motion.ellipse
+            cx="50"
+            cy="86"
+            rx="22"
+            ry="4"
+            fill="#9CB7C9"
+            opacity={0.08}
+            animate={{ opacity: [0.06, 0.14, 0.06], rx: [20, 23, 20] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+          />
+        )}
         
-        {/* Coffee liquid - static version always rendered */}
-        <path
-          d="M25,35 L75,35 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z"
-          fill="#75462E"
-        />
-        
-        {/* Coffee surface - static version always rendered */}
-        <ellipse
-          cx="50"
-          cy="35"
-          rx="25"
-          ry="5"
-          fill="#8C5A37"
-        />
-        
-        {/* Cup handle */}
-        <path
-          d="M80,40 Q95,40 95,55 Q95,70 80,70"
-          fill="transparent"
-          stroke="#FFFFFF"
-          strokeWidth="5"
-          strokeLinecap="round"
-        />
-        
-        {/* Cup rim highlight */}
-        <path
-          d="M20,30 Q20,25 25,25 L75,25 Q80,25 80,30"
-          fill="#EEEEEE"
-          stroke="#DDDDDD"
-          strokeWidth="1"
-        />
-        
-        {/* Saucer */}
-        <ellipse cx="50" cy="85" rx="35" ry="5" fill="#FFFFFF" stroke="#DDDDDD" strokeWidth="1" />
-        
-        {/* Static steam */}
-        <path
-          d="M40,20 Q40,15 45,15 Q50,15 50,10"
-          fill="transparent" 
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray="1,3"
-          opacity="0.3"
-        />
-        <path
-          d="M50,20 Q50,10 55,10 Q60,10 60,5"
-          fill="transparent" 
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray="1,3"
-          opacity="0.3"
-        />
-        <path
-          d="M60,20 Q60,15 65,15 Q70,15 70,8"
-          fill="transparent" 
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray="1,3"
-          opacity="0.3"
-        />
-        
-        {/* Add animated elements only after mounting */}
+        {/* Animated elements */}
         {mounted && (
           <>
-            {/* Animated coffee liquid (sloshing effect) */}
-            <motion.path
-              d="M25,35 L75,35 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z"
-              fill="#75462E"
-              opacity="0.9"
-              animate={{ 
-                d: [
-                  "M25,35 L75,35 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z", 
-                  "M25,33 L75,37 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z",
-                  "M25,37 L75,33 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z",
-                  "M25,35 L75,35 L75,70 Q75,80 65,80 L35,80 Q25,80 25,70 Z"
-                ]
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Animated coffee ripples */}
-            <motion.ellipse
-              cx="50"
-              cy="35"
-              rx="25"
-              ry="5"
-              fill="#8C5A37"
-              opacity="0.7"
-              animate={{ 
-                ry: [5, 3, 5],
-                rx: [25, 24, 25]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Animated steam */}
-            <motion.path
-              d="M40,20 Q40,15 45,15 Q50,15 50,10"
-              fill="transparent" 
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="1,3"
-              opacity="0.3"
-              animate={{ 
-                opacity: [0.3, 0.7, 0.3],
-                y: [-1, 1, -1]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity
-              }}
-            />
-            <motion.path
-              d="M50,20 Q50,10 55,10 Q60,10 60,5"
-              fill="transparent" 
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="1,3"
-              opacity="0.3"
-              animate={{ 
-                opacity: [0.3, 0.7, 0.3],
-                y: [-1, 1, -1]
-              }}
-              transition={{ 
-                duration: 2.5,
-                repeat: Infinity,
-                delay: 0.5
-              }}
-            />
-            <motion.path
-              d="M60,20 Q60,15 65,15 Q70,15 70,8"
-              fill="transparent" 
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="1,3"
-              opacity="0.3"
-              animate={{ 
-                opacity: [0.3, 0.7, 0.3],
-                y: [-1, 1, -1]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                delay: 1
-              }}
-            />
+            {/* Subtle steam wisps */}
+            {[ -6, 0, 6 ].map((dx, i) => (
+              <motion.path
+                key={`steam-${i}`}
+                d={`M${50 + dx},26 C ${50 + dx},22 ${52 + dx},20 ${54 + dx},18`}
+                fill="transparent"
+                stroke="#FFFFFF"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeOpacity="0.5"
+                animate={{ opacity: [0, 0.8, 0], y: [0, -10, -16] }}
+                transition={{ duration: 2 + i * 0.3, repeat: Infinity, ease: "easeOut", delay: i * 0.2 }}
+              />
+            ))}
           </>
         )}
       </svg>
-    </div>
+    </motion.div>
   )
 }
 
-// Experience Icon Component
-const ExperienceIcon = () => {
-  const [mounted, setMounted] = useState(false)
-  
+// Animated number (counts up when in view)
+const AnimatedNumber = ({ value, inView }: { value: number; inView: boolean }) => {
+  const mv = useMotionValue(0)
+  const [display, setDisplay] = useState(0)
   useEffect(() => {
-    setMounted(true)
-  }, [])
-  
+    const unsub = mv.on("change", (latest) => setDisplay(Math.floor(latest as number)))
+    return () => unsub()
+  }, [mv])
+  useEffect(() => {
+    if (!inView) return
+    const controls = animate(mv, value, { duration: 1.2, ease: "easeOut" })
+    return () => controls.stop()
+  }, [inView, value, mv])
+  return <>{display.toLocaleString()}</>
+}
+
+// Removed 3D implementation to maintain React 19 compatibility without extra deps
+
+// Security Shield Icon (cybersecurity-themed)
+const SecurityShieldIcon = () => {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
   return (
     <div className="relative w-20 h-20 mx-auto mb-4">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        {/* Rocket body - static version */}
-        <path
-          d="M50,20 L60,40 L60,70 Q60,80 50,80 Q40,80 40,70 L40,40 Z"
-          fill="#FFFFFF"
-          stroke="#DDDDDD"
-          strokeWidth="2"
-        />
-        
-        {/* Window - static version */}
-        <circle
-          cx="50"
-          cy="50"
-          r="8"
-          fill="#9CB7C9"
-          opacity="0.7"
-        />
-        
-        {/* Fins - static version */}
-        <path 
-          d="M40,70 L30,85 L40,80 Z"
-          fill="#FFFFFF"
-          stroke="#DDDDDD"
-          strokeWidth="1"
-        />
-        <path 
-          d="M60,70 L70,85 L60,80 Z"
-          fill="#FFFFFF"
-          stroke="#DDDDDD"
-          strokeWidth="1"
-        />
-        
-        {/* Rocket flames - static version */}
-        <path 
-          d="M45,80 Q50,95 55,80"
-          fill="transparent"
-          stroke="#FF6B6B"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        
-        {/* Add animated elements only after mounting */}
+      <motion.svg
+        viewBox="0 0 100 100"
+        className="w-full h-full drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)]"
+        animate={{ y: [0, -2, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <defs>
+          {/* Clay-style gradients for 3D look */}
+          <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2B2B2B" />
+            <stop offset="50%" stopColor="#1F1F1F" />
+            <stop offset="100%" stopColor="#171717" />
+          </linearGradient>
+          <radialGradient id="highlightGrad" cx="50%" cy="20%" r="60%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Shield base with soft gradient and stroke */}
+        <path d="M50 10 L80 22 V46 C80 64 66 78 50 88 C34 78 20 64 20 46 V22 Z" fill="url(#shieldGrad)" stroke="#3A3A3A" strokeWidth="1.5" />
+        {/* Gloss highlight */}
+        <path d="M50 12 L78 23 V37 C78 49 69 58 50 68 C31 58 22 49 22 37 V23 Z" fill="url(#highlightGrad)" />
+
+        {/* Lock overlay */}
+        <rect x="38" y="45" width="24" height="18" rx="4" fill="#9CB7C9" opacity="0.2" />
+        <path d="M43 45 v-5 a7 7 0 0 1 14 0 v5" fill="none" stroke="#9CB7C9" strokeWidth="2" />
+        <circle cx="50" cy="54" r="2.5" fill="#9CB7C9" />
+
+        {/* Radar ring (static perimeter) */}
+        <circle cx="50" cy="50" r="24" fill="none" stroke="#9CB7C9" strokeOpacity="0.18" strokeWidth="2" />
+
         {mounted && (
           <>
-            {/* Animated window */}
+            {/* Pulsing ring */}
             <motion.circle
               cx="50"
               cy="50"
-              r="8"
+              r="18"
               fill="#9CB7C9"
-              opacity="0.7"
-              animate={{ 
-                opacity: [0.7, 1, 0.7],
-                r: [8, 8.5, 8]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              opacity="0.08"
+              animate={{ r: [16, 24, 16], opacity: [0.12, 0, 0.12] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
             />
-            
-            {/* Animated rocket body */}
+
+            {/* Rotating radar sweep */}
             <motion.g
-              animate={{ 
-                y: [0, -3, 0]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              style={{ originX: 50, originY: 50 }}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
             >
-              {/* Main rocket flame */}
-              <motion.path
-                d="M45,80 Q50,95 55,80"
-                fill="transparent"
-                stroke="#FF6B6B"
-                strokeWidth="3"
-                strokeLinecap="round"
-                animate={{ 
-                  d: [
-                    "M45,80 Q50,95 55,80",
-                    "M45,80 Q50,100 55,80",
-                    "M45,80 Q50,95 55,80"
-                  ],
-                  stroke: ["#FF6B6B", "#FFA500", "#FF6B6B"]
-                }}
-                transition={{ 
-                  duration: 0.8,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              
-              {/* Inner flame glow */}
-              <motion.path
-                d="M47,80 Q50,90 53,80"
-                fill="transparent"
-                stroke="#FFDD00"
-                strokeWidth="2"
-                strokeLinecap="round"
-                animate={{
-                  d: [
-                    "M47,80 Q50,90 53,80",
-                    "M47,80 Q50,93 53,80",
-                    "M47,80 Q50,90 53,80"
-                  ],
-                  opacity: [0.8, 1, 0.8]
-                }}
-                transition={{
-                  duration: 0.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              
-              {/* Small flame particles */}
-              <motion.g>
-                <motion.circle
-                  cx="48"
-                  cy="93"
-                  r="1"
-                  fill="#FFDD00"
-                  animate={{
-                    opacity: [0, 0.8, 0],
-                    y: [0, 10, 20],
-                    x: [-2, -4, -6]
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                />
-                <motion.circle
-                  cx="50"
-                  cy="93"
-                  r="1"
-                  fill="#FFDD00"
-                  animate={{
-                    opacity: [0, 0.8, 0],
-                    y: [0, 12, 24]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.3
-                  }}
-                />
-                <motion.circle
-                  cx="52"
-                  cy="93"
-                  r="1"
-                  fill="#FFDD00"
-                  animate={{
-                    opacity: [0, 0.8, 0],
-                    y: [0, 10, 20],
-                    x: [2, 4, 6]
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.6
-                  }}
-                />
-              </motion.g>
+              <path d="M50 50 L74 50 A24 24 0 0 1 50 74 Z" fill="#9CB7C9" opacity="0.14" />
             </motion.g>
+
+            {/* Perimeter scan stroke */}
+            <motion.circle
+              cx="50"
+              cy="50"
+              r="24"
+              fill="none"
+              stroke="#9CB7C9"
+              strokeWidth="2"
+              strokeDasharray="150 150"
+              animate={{ strokeDashoffset: [150, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            />
           </>
         )}
-      </svg>
+      </motion.svg>
     </div>
   )
 }
@@ -415,164 +259,76 @@ const LearningIcon = () => {
   
   return (
     <div className="relative w-20 h-20 mx-auto mb-4">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        {/* Lightbulb stem */}
-        <path
-          d="M50,70 L50,75"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        
-        {/* Lightbulb base */}
-        <path
-          d="M40,75 L60,75 L58,82 L42,82 Z"
-          fill="#DDDDDD"
-          stroke="#FFFFFF"
-          strokeWidth="1.5"
-        />
-        
-        {/* Lightbulb glass */}
-        <path
-          d="M38,40 C38,28 62,28 62,40 C62,60 58,68 58,75 L42,75 C42,68 38,60 38,40 Z"
-          fill="#9CB7C950"
-          stroke="#FFFFFF"
-          strokeWidth="2"
-        />
-        
-        {/* Lightbulb top reflection */}
-        <path
-          d="M46,32 C46,30 54,30 54,32"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="1"
-          strokeLinecap="round"
-          opacity="0.8"
-        />
-        
-        {/* Add animated elements only after mounting */}
+      <motion.svg
+        viewBox="0 0 100 100"
+        className="w-full h-full drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)]"
+        animate={{ y: [0, -1.5, 0], rotate: [0, -1, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <defs>
+          <filter id="bulbShadow" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.25" />
+          </filter>
+          <linearGradient id="glassGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#FFFFFF"/>
+            <stop offset="100%" stopColor="#EDEDED"/>
+          </linearGradient>
+          <linearGradient id="baseGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#E6E6E6"/>
+            <stop offset="100%" stopColor="#CFCFCF"/>
+          </linearGradient>
+          <radialGradient id="glowGrad" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stopColor="#FFDE59" stopOpacity="0.35"/>
+            <stop offset="100%" stopColor="#FFDE59" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+
+        {/* Outer soft glow */}
         {mounted && (
-          <>
-            {/* Animated lightbulb glow - outer */}
-            <motion.ellipse
-              cx="50"
-              cy="50"
-              rx="22"
-              ry="30"
-              fill="#FFDE5920"
-              animate={{ 
-                opacity: [0.1, 0.3, 0.1],
-                rx: [22, 25, 22],
-                ry: [30, 33, 30]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Animated lightbulb glow - inner */}
-            <motion.ellipse
-              cx="50"
-              cy="50"
-              rx="15"
-              ry="22"
-              fill="#FFDE5930"
-              animate={{ 
-                opacity: [0.2, 0.5, 0.2],
-                rx: [15, 17, 15],
-                ry: [22, 24, 22]
-              }}
-              transition={{ 
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.2
-              }}
-            />
-            
-            {/* Animated filament */}
-            <motion.path
-              d="M44,60 Q50,45 56,60"
-              fill="none"
-              stroke="#FFDE59"
-              strokeWidth="2"
-              strokeLinecap="round"
-              animate={{ 
-                opacity: [0.5, 1, 0.5]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Light rays */}
-            {[
-              { x1: 50, y1: 25, x2: 50, y2: 15, delay: 0.1 },
-              { x1: 50, y1: 50, x2: 30, y2: 30, delay: 0.4 },
-              { x1: 50, y1: 50, x2: 70, y2: 30, delay: 0.7 },
-              { x1: 50, y1: 50, x2: 25, y2: 50, delay: 1.0 },
-              { x1: 50, y1: 50, x2: 75, y2: 50, delay: 1.3 },
-              { x1: 50, y1: 50, x2: 30, y2: 65, delay: 1.6 },
-              { x1: 50, y1: 50, x2: 70, y2: 65, delay: 1.9 }
-            ].map((ray, i) => (
-              <motion.line
-                key={`ray-${i}`}
-                x1={ray.x1}
-                y1={ray.y1}
-                x2={ray.x2}
-                y2={ray.y2}
-                stroke="#FFDE59"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: [0, 0.7, 0]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: ray.delay
-                }}
-              />
-            ))}
-            
-            {/* Light particles */}
-            {[
-              { cx: 40, cy: 35, size: 4, delay: 0.2 },
-              { cx: 60, cy: 35, size: 3, delay: 0.6 },
-              { cx: 35, cy: 55, size: 3, delay: 1.0 },
-              { cx: 65, cy: 55, size: 4, delay: 1.4 },
-              { cx: 50, cy: 30, size: 3, delay: 1.8 }
-            ].map((particle, i) => (
-              <motion.circle
-                key={`particle-${i}`}
-                cx={particle.cx}
-                cy={particle.cy}
-                r={particle.size / 2}
-                fill="#FFDE59"
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: [0, 0.8, 0],
-                  y: [-2, -particle.size * 2],
-                  x: [0, (Math.random() * 4) - 2]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  delay: particle.delay
-                }}
-              />
-            ))}
-          </>
+          <motion.circle cx="50" cy="48" r="26" fill="url(#glowGrad)"
+            animate={{ opacity: [0.2, 0.45, 0.2], r: [24, 27, 24] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
         )}
-      </svg>
+
+        {/* Bulb group with shadow */}
+        <g filter="url(#bulbShadow)">
+          {/* Glass */}
+          <path d="M36,40 C36,27 64,27 64,40 C64,59 60,66 60,74 L40,74 C40,66 36,59 36,40 Z" fill="url(#glassGrad)" stroke="#FFFFFF" strokeWidth="1.8"/>
+          {/* Reflection */}
+          <path d="M46,30 C46,28 54,28 54,30" fill="none" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" opacity="0.9"/>
+          {/* Base */}
+          <path d="M39,74 L61,74 L59,82 L41,82 Z" fill="url(#baseGrad)" stroke="#EDEDED" strokeWidth="1"/>
+          {/* Stem */}
+          <path d="M50,69 L50,74" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+          {/* Filament */}
+          {mounted && (
+            <motion.path d="M44,60 Q50,46 56,60" fill="none" stroke="#FFDE59" strokeWidth="2"
+              animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          )}
+        </g>
+
+        {/* Rays */}
+        {mounted && (
+          [
+            { x1: 50, y1: 24, x2: 50, y2: 14, delay: 0.1 },
+            { x1: 35, y1: 32, x2: 27, y2: 26, delay: 0.4 },
+            { x1: 65, y1: 32, x2: 73, y2: 26, delay: 0.7 },
+            { x1: 32, y1: 48, x2: 22, y2: 48, delay: 1.0 },
+            { x1: 68, y1: 48, x2: 78, y2: 48, delay: 1.3 },
+            { x1: 35, y1: 64, x2: 27, y2: 70, delay: 1.6 },
+            { x1: 65, y1: 64, x2: 73, y2: 70, delay: 1.9 }
+          ].map((r, i) => (
+            <motion.line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2}
+              stroke="#FFDE59" strokeWidth="1.5" strokeLinecap="round"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.75, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: r.delay }}
+            />
+          ))
+        )}
+      </motion.svg>
     </div>
   )
 }
@@ -744,7 +500,7 @@ export default function About() {
               whileHover={isMounted ? { y: -5, boxShadow: "0 10px 25px -5px rgba(156, 183, 201, 0.3)" } : {}}
               className="p-8 bg-black text-white dark:bg-[#2A2A2A] rounded-lg border border-[#9CB7C9]/20 hover:border-[#9CB7C9]/50 transition-all duration-300 flex flex-col items-center shadow"
             >
-              <ExperienceIcon />
+              <SecurityShieldIcon />
               <h3 className="font-bold text-3xl mb-1 text-[#9CB7C9]">
                 {yearsExperience}
               </h3>
@@ -772,7 +528,7 @@ export default function About() {
             >
               <CoffeeCup />
               <h3 className="font-bold text-3xl mb-1 text-[#9CB7C9]">
-                {coffeeCount}
+                <AnimatedNumber value={coffeeCount} inView={inView} />
               </h3>
               <p className="text-foreground/70 dark:text-gray-400">{t('about.cards.coffeeCount')}</p>
             </motion.div>

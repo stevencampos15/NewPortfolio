@@ -422,6 +422,15 @@ export default function Projects() {
             exit={{ opacity: 0 }}
             onClick={() => setSelectedProject(null)}
           >
+            {/* Mobile persistent close button (fixed) */}
+            <button
+              className="md:hidden fixed top-4 right-4 z-[60] bg-black/60 dark:bg-black/60 text-foreground dark:text-white p-2 rounded-full hover:bg-black/80 transition-colors"
+              onClick={(e) => { e.stopPropagation(); setSelectedProject(null) }}
+              aria-label="Close project details"
+              title="Close"
+            >
+              <X size={20} />
+            </button>
             <motion.div
               className="bg-black text-white dark:bg-[#2A2A2A] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg"
               initial={{ scale: 0.9, y: 20, opacity: 0 }}
@@ -438,7 +447,7 @@ export default function Projects() {
                   className="object-cover"
                 />
                 <button 
-                  className="absolute top-4 right-4 bg-black/50 dark:bg-black/50 text-foreground dark:text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                  className="hidden md:flex absolute top-4 right-4 bg-black/50 dark:bg-black/50 text-foreground dark:text-white p-2 rounded-full hover:bg-black/70 transition-colors"
                   onClick={() => setSelectedProject(null)}
                   aria-label="Close project details"
                   title="Close"
