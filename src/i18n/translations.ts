@@ -38,54 +38,55 @@ export const translations = {
     skills: {
       title: "Skills & Technologies",
       groups: {
-        "Security Tools & Platforms": [
-          { name: "Sophos (Central, XG Firewall, EDR)", level: "Advanced" },
-          { name: "Palo Alto Networks Firewalls", level: "Intermediate" },
-          { name: "Zscaler ZIA", level: "Intermediate" },
-          { name: "Symantec DLP", level: "Intermediate" },
-          { name: "Arbor Edge Defense", level: "Intermediate" },
-          { name: "F5 (Load Balancing, WAF)", level: "Intermediate" },
-          { name: "Qualys", level: "Intermediate" },
-          { name: "Veracode", level: "Intermediate" },
-          { name: "Workspace One (MDM)", level: "Advanced" }
+        // Edit your skill percentages here (0–100). Update `percent` values as desired.
+        "Security Tools": [
+          { name: "Sophos (Central, XG Firewall, EDR)", percent: 90, level: "Advanced" },
+          { name: "Palo Alto Networks Firewalls", percent: 70, level: "Intermediate" },
+          { name: "Zscaler ZIA", percent: 70, level: "Intermediate" },
+          { name: "Symantec DLP", percent: 70, level: "Intermediate" },
+          { name: "Arbor Edge Defense", percent: 70, level: "Intermediate" },
+          { name: "F5 (Load Balancing, WAF)", percent: 70, level: "Intermediate" },
+          { name: "Qualys", percent: 70, level: "Intermediate" },
+          { name: "Veracode", percent: 70, level: "Intermediate" },
+          { name: "Workspace One (MDM)", percent: 90, level: "Advanced" }
         ],
-        "Operating Systems & Infrastructure": [
-          { name: "Linux/Red Hat", level: "Advanced" },
-          { name: "Windows Server", level: "Advanced" },
-          { name: "Active Directory", level: "Advanced" },
-          { name: "VMware", level: "Intermediate" }
+        "OS & Infra": [
+          { name: "Linux/Red Hat", percent: 90, level: "Advanced" },
+          { name: "Windows Server", percent: 90, level: "Advanced" },
+          { name: "Active Directory", percent: 90, level: "Advanced" },
+          { name: "VMware", percent: 70, level: "Intermediate" }
         ],
         "Network Security": [
-          { name: "Firewalls (Sophos XG, Palo Alto)", level: "Advanced" },
-          { name: "IDS/IPS", level: "Intermediate" },
-          { name: "Network Monitoring", level: "Advanced" },
-          { name: "VPN Technologies", level: "Intermediate" },
-          { name: "Load Balancing", level: "Intermediate" }
+          { name: "Firewalls (Sophos XG, Palo Alto)", percent: 90, level: "Advanced" },
+          { name: "IDS/IPS", percent: 70, level: "Intermediate" },
+          { name: "Network Monitoring", percent: 90, level: "Advanced" },
+          { name: "VPN Technologies", percent: 70, level: "Intermediate" },
+          { name: "Load Balancing", percent: 70, level: "Intermediate" }
         ],
-        "Endpoint & Identity Security": [
-          { name: "EDR (Endpoint Detection & Response)", level: "Advanced" },
-          { name: "MDM (Mobile Device Management)", level: "Advanced" },
-          { name: "Endpoint Protection", level: "Advanced" },
-          { name: "Policy Deployment & Management", level: "Advanced" }
+        "Endpoint & Identity": [
+          { name: "EDR (Endpoint Detection & Response)", percent: 90, level: "Advanced" },
+          { name: "MDM (Mobile Device Management)", percent: 90, level: "Advanced" },
+          { name: "Endpoint Protection", percent: 90, level: "Advanced" },
+          { name: "Policy Deployment & Management", percent: 90, level: "Advanced" }
         ],
-        "Security Frameworks & Compliance": [
-          { name: "Threat Detection & Analysis", level: "Advanced" },
-          { name: "Perimeter Security", level: "Advanced" },
-          { name: "Security Policy Management", level: "Advanced" },
-          { name: "Incident Response", level: "Intermediate" }
+        "Security Practices": [
+          { name: "Threat Detection & Analysis", percent: 90, level: "Advanced" },
+          { name: "Perimeter Security", percent: 90, level: "Advanced" },
+          { name: "Security Policy Management", percent: 90, level: "Advanced" },
+          { name: "Incident Response", percent: 70, level: "Intermediate" }
         ],
-        "Programming & Scripting": [
-          { name: "JavaScript", level: "Advanced" },
-          { name: "Java", level: "Intermediate" },
-          { name: "Python", level: "Intermediate" },
-          { name: "PowerShell", level: "Intermediate" },
-          { name: "SQL", level: "Advanced" },
-          { name: "HTML/CSS", level: "Advanced" }
+        "Programming": [
+          { name: "JavaScript", percent: 90, level: "Advanced" },
+          { name: "Java", percent: 70, level: "Intermediate" },
+          { name: "Python", percent: 70, level: "Intermediate" },
+          { name: "PowerShell", percent: 70, level: "Intermediate" },
+          { name: "SQL", percent: 90, level: "Advanced" },
+          { name: "HTML/CSS", percent: 90, level: "Advanced" }
         ],
-        "Data Analysis & Reporting": [
-          { name: "Excel (Advanced Analytics)", level: "Advanced" },
-          { name: "Security Reporting", level: "Advanced" },
-          { name: "Log Analysis", level: "Intermediate" }
+        "Data & Reports": [
+          { name: "Excel (Advanced Analytics)", percent: 90, level: "Advanced" },
+          { name: "Security Reporting", percent: 90, level: "Advanced" },
+          { name: "Log Analysis", percent: 70, level: "Intermediate" }
         ]
       }
     },
@@ -149,54 +150,55 @@ export const translations = {
     skills: {
       title: "Habilidades y Tecnologías",
       groups: {
-        "Herramientas y Plataformas de Seguridad": [
-          { name: "Sophos (Central, XG Firewall, EDR)", level: "Avanzado" },
-          { name: "Palo Alto Networks Firewalls", level: "Intermedio" },
-          { name: "Zscaler ZIA", level: "Intermedio" },
-          { name: "Symantec DLP", level: "Intermedio" },
-          { name: "Arbor Edge Defense", level: "Intermedio" },
-          { name: "F5 (Load Balancing, WAF)", level: "Intermedio" },
-          { name: "Qualys", level: "Intermedio" },
-          { name: "Veracode", level: "Intermedio" },
-          { name: "Workspace One (MDM)", level: "Avanzado" }
+        // Edita los porcentajes de habilidades aquí (0–100). Actualiza `percent` según prefieras.
+        "Herramientas Seguridad": [
+          { name: "Sophos (Central, XG Firewall, EDR)", percent: 90, level: "Avanzado" },
+          { name: "Palo Alto Networks Firewalls", percent: 70, level: "Intermedio" },
+          { name: "Zscaler ZIA", percent: 70, level: "Intermedio" },
+          { name: "Symantec DLP", percent: 70, level: "Intermedio" },
+          { name: "Arbor Edge Defense", percent: 70, level: "Intermedio" },
+          { name: "F5 (Load Balancing, WAF)", percent: 70, level: "Intermedio" },
+          { name: "Qualys", percent: 70, level: "Intermedio" },
+          { name: "Veracode", percent: 70, level: "Intermedio" },
+          { name: "Workspace One (MDM)", percent: 90, level: "Avanzado" }
         ],
-        "Sistemas Operativos e Infraestructura": [
-          { name: "Linux/Red Hat", level: "Avanzado" },
-          { name: "Windows Server", level: "Avanzado" },
-          { name: "Active Directory", level: "Avanzado" },
-          { name: "VMware", level: "Intermedio" }
+        "SO e Infra": [
+          { name: "Linux/Red Hat", percent: 90, level: "Avanzado" },
+          { name: "Windows Server", percent: 90, level: "Avanzado" },
+          { name: "Active Directory", percent: 90, level: "Avanzado" },
+          { name: "VMware", percent: 70, level: "Intermedio" }
         ],
         "Seguridad de Red": [
-          { name: "Firewalls (Sophos XG, Palo Alto)", level: "Avanzado" },
-          { name: "IDS/IPS", level: "Intermedio" },
-          { name: "Monitoreo de Red", level: "Avanzado" },
-          { name: "Tecnologías VPN", level: "Intermedio" },
-          { name: "Balanceo de Carga", level: "Intermedio" }
+          { name: "Firewalls (Sophos XG, Palo Alto)", percent: 90, level: "Avanzado" },
+          { name: "IDS/IPS", percent: 70, level: "Intermedio" },
+          { name: "Monitoreo de Red", percent: 90, level: "Avanzado" },
+          { name: "Tecnologías VPN", percent: 70, level: "Intermedio" },
+          { name: "Balanceo de Carga", percent: 70, level: "Intermedio" }
         ],
-        "Seguridad de Endpoints e Identidad": [
-          { name: "EDR (Endpoint Detection & Response)", level: "Avanzado" },
-          { name: "MDM (Mobile Device Management)", level: "Avanzado" },
-          { name: "Protección de Endpoints", level: "Avanzado" },
-          { name: "Despliegue y Gestión de Políticas", level: "Avanzado" }
+        "Endpoints e Identidad": [
+          { name: "EDR (Endpoint Detection & Response)", percent: 90, level: "Avanzado" },
+          { name: "MDM (Mobile Device Management)", percent: 90, level: "Avanzado" },
+          { name: "Protección de Endpoints", percent: 90, level: "Avanzado" },
+          { name: "Despliegue y Gestión de Políticas", percent: 90, level: "Avanzado" }
         ],
-        "Marcos de Seguridad y Cumplimiento": [
-          { name: "Detección y Análisis de Amenazas", level: "Avanzado" },
-          { name: "Seguridad Perimetral", level: "Avanzado" },
-          { name: "Gestión de Políticas de Seguridad", level: "Avanzado" },
-          { name: "Respuesta a Incidentes", level: "Intermedio" }
+        "Marcos y Normativa": [
+          { name: "Detección y Análisis de Amenazas", percent: 90, level: "Avanzado" },
+          { name: "Seguridad Perimetral", percent: 90, level: "Avanzado" },
+          { name: "Gestión de Políticas de Seguridad", percent: 90, level: "Avanzado" },
+          { name: "Respuesta a Incidentes", percent: 70, level: "Intermedio" }
         ],
-        "Programación y Scripting": [
-          { name: "JavaScript", level: "Avanzado" },
-          { name: "Java", level: "Intermedio" },
-          { name: "Python", level: "Intermedio" },
-          { name: "PowerShell", level: "Intermedio" },
-          { name: "SQL", level: "Avanzado" },
-          { name: "HTML/CSS", level: "Avanzado" }
+        "Programación": [
+          { name: "JavaScript", percent: 90, level: "Avanzado" },
+          { name: "Java", percent: 70, level: "Intermedio" },
+          { name: "Python", percent: 70, level: "Intermedio" },
+          { name: "PowerShell", percent: 70, level: "Intermedio" },
+          { name: "SQL", percent: 90, level: "Avanzado" },
+          { name: "HTML/CSS", percent: 90, level: "Avanzado" }
         ],
-        "Análisis de Datos y Reportes": [
-          { name: "Excel (Analítica Avanzada)", level: "Avanzado" },
-          { name: "Reportería de Seguridad", level: "Avanzado" },
-          { name: "Análisis de Logs", level: "Intermedio" }
+        "Datos y Reportes": [
+          { name: "Excel (Analítica Avanzada)", percent: 90, level: "Avanzado" },
+          { name: "Reportería de Seguridad", percent: 90, level: "Avanzado" },
+          { name: "Análisis de Logs", percent: 70, level: "Intermedio" }
         ]
       }
     },
