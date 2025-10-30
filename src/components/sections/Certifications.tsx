@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useLanguage } from "@/context/LanguageContext"
-import { Shield, Server, Globe, Activity, Terminal, Layers, Cpu, Database, Award } from "lucide-react"
+import { Shield, Server, Globe, Activity, Terminal, Layers, Cpu, Database, Award, ExternalLink } from "lucide-react"
 import React from "react"
 
 type Certification = {
@@ -14,7 +14,7 @@ type Certification = {
 }
 
 const certifications: Certification[] = [
-  { title: "Palo Alto Networks Certified Cybersecurity Practitioner", vendor: "PALO ALTO", date: "OCT 2025" },
+  { title: "Palo Alto Networks Certified Cybersecurity Practitioner", vendor: "PALO ALTO", date: "OCT 2025", link: "https://drive.google.com/file/d/1Tf0JocsydVIPK3rBRXpJHdkxD21dfrgO/view?usp=sharing" },
   { title: "Sophos Central Endpoint Protection Certified Engineer", vendor: "SOPHOS", date: "OCT 2025" },
   { title: "Sophos Detection and Response", vendor: "SOPHOS", date: "OCT 2025" },
   { title: "Network Defense Essentials (NDE)", vendor: "EC-Councill", date: "APR 2024" },
@@ -92,6 +92,21 @@ export default function Certifications() {
               >
                 {/* Hover background overlay (persists while hovered) */}
                 <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[#9CB7C9] z-0"></div>
+
+                {/* Top-right open-in-new-tab icon */}
+                {c.link && (
+                  <a
+                    href={c.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="Open certification in new tab"
+                    title="Open in new tab"
+                    className="absolute right-3 top-3 z-20 text-[#9CB7C9] opacity-80 hover:opacity-100 transition-colors group-hover:text-black"
+                  >
+                    <ExternalLink size={16} />
+                  </a>
+                )}
 
                 <div className="flex flex-col items-start gap-1.5 mb-1 z-10">
                   <div className="text-[#9CB7C9] group-hover:text-black transition-colors">
