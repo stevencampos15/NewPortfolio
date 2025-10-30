@@ -41,7 +41,7 @@ export const translations = {
         // Edit your skill percentages here (0–100). Update `percent` values as desired.
         "Security Tools": [
           { name: "Sophos (Central, XG Firewall, EDR)", percent: 90, level: "Advanced" },
-          { name: "Palo Alto Networks Firewalls", percent: 70, level: "Intermediate" },
+          { name: "Palo Alto Networks Firewalls", percent: 65, level: "Intermediate" },
           { name: "Zscaler ZIA", percent: 70, level: "Intermediate" },
           { name: "Symantec DLP", percent: 70, level: "Intermediate" },
           { name: "Arbor Edge Defense", percent: 70, level: "Intermediate" },
@@ -50,7 +50,7 @@ export const translations = {
           { name: "Veracode", percent: 70, level: "Intermediate" },
           { name: "Workspace One (MDM)", percent: 90, level: "Advanced" }
         ],
-        "OS & Infra": [
+        "Operarting Systems & Infra": [
           { name: "Linux/Red Hat", percent: 90, level: "Advanced" },
           { name: "Windows Server", percent: 90, level: "Advanced" },
           { name: "Active Directory", percent: 90, level: "Advanced" },
@@ -69,7 +69,7 @@ export const translations = {
           { name: "Endpoint Protection", percent: 90, level: "Advanced" },
           { name: "Policy Deployment & Management", percent: 90, level: "Advanced" }
         ],
-        "Security Practices": [
+        "Sec Frameworks & Compliance": [
           { name: "Threat Detection & Analysis", percent: 90, level: "Advanced" },
           { name: "Perimeter Security", percent: 90, level: "Advanced" },
           { name: "Security Policy Management", percent: 90, level: "Advanced" },

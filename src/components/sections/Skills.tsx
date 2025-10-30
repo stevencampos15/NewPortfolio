@@ -25,8 +25,8 @@ const clampPercent = (value: number) => {
 
 const getCategorySpanClasses = (title: string) => {
   const length = title.length
-  if (length >= 28) return "sm:col-span-2 lg:col-span-3"
-  if (length >= 22) return "lg:col-span-2"
+  if (length >= 28) return "col-span-2 md:col-span-2 lg:col-span-3"
+  if (length >= 22) return "col-span-2 md:col-span-2"
   return ""
 }
 
@@ -76,16 +76,19 @@ export default function Skills() {
           </div>
 
           {/* Category cards grid with single-open accordion */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 grid-flow-dense">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-6 grid-flow-dense">
             {entries.map(([category, skills]) => {
               const isOpen = openCategory === category
               const spanClass = getCategorySpanClasses(category)
               const minHClass = getCategoryMinHeightClass(category)
               const sectionId = `skills-section-${category.replace(/\s+/g, '-').toLowerCase()}`
+              const effectiveSpanClass = isOpen ? "col-span-2 md:col-span-3" : spanClass
               return (
-                <div
+                <motion.div
                   key={category}
-                  className={clsx("rounded-xl border border-[#9CB7C9]/20 bg-card", spanClass, minHClass)}
+                  layout
+                  transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
+                  className={clsx("rounded-xl border border-[#9CB7C9]/20 bg-card", effectiveSpanClass, minHClass)}
                 >
                   <button
                     type="button"
@@ -140,7 +143,7 @@ export default function Skills() {
                       })}
                     </div>
                   </motion.div>
-                </div>
+                </motion.div>
               )
             })}
           </div>
