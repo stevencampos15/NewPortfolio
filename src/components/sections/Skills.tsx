@@ -60,7 +60,7 @@ export default function Skills() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
+          className="max-w-6xl mx-auto"
         >
           <div className="w-full mb-12">
             <motion.div 
@@ -110,8 +110,9 @@ export default function Skills() {
                   >
                     <div className="px-3 pb-3 space-y-3 sm:px-4 sm:pb-4 sm:space-y-4">
                       {skills.map((skill, index) => {
-                    const raw = skill.percent ?? mapLevelToPercent(skill.level)
-                    const percent = clampPercent(raw)
+                        const raw = skill.percent ?? mapLevelToPercent(skill.level)
+                        const percent = clampPercent(raw)
+                        const display = skill.level ?? `${percent}%`
                     return (
                       <div key={skill.name} className="w-full" aria-label={skill.name}>
                         <div
@@ -134,7 +135,7 @@ export default function Skills() {
                               {skill.name}
                             </span>
                                 <span className="text-[11px] sm:text-xs text-muted-foreground">
-                              {percent}%
+                                  {display}
                             </span>
                           </div>
                         </div>

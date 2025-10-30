@@ -26,7 +26,7 @@ export function Timeline() {
           <p className="text-foreground/70 dark:text-gray-400 max-w-2xl mx-auto mt-6 px-4">{t('timeline.description')}</p>
         </div>
 
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-6xl mx-auto">
           {/* Desktop center line */}
           <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-[#9CB7C9]/20"></div>
 
