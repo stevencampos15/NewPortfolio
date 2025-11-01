@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import LanguageToggle from "@/components/LanguageToggle";
 import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
             <LanguageToggle />
             <ThemeToggle />
             {children}
+              <ChatWidget />
           </LanguageProvider>
         </ThemeProvider>
       </body>
