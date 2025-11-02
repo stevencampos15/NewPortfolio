@@ -199,7 +199,8 @@ const Panel: React.FC<{ children: React.ReactNode; isOpen: boolean } & {
       aria-label="AI chat"
       className={
         (isOpen ? "" : "hidden ") +
-        "w-96 max-w-[95vw] h-[28rem] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl flex flex-col overflow-hidden"
+        "w-96 max-w-[95vw] h-[28rem] rounded-xl shadow-xl flex flex-col overflow-hidden " +
+        "backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10"
       }
     >
       {children}
@@ -210,10 +211,10 @@ const Panel: React.FC<{ children: React.ReactNode; isOpen: boolean } & {
 const MessageBubble: React.FC<{ msg: ChatMessage }> = ({ msg }) => (
   <div
     className={
-      "px-3 py-2 rounded-lg text-sm whitespace-pre-wrap " +
+      "px-3 py-2 rounded-lg text-sm whitespace-pre-wrap border " +
       (msg.role === "user"
-        ? "bg-blue-600 text-white self-end"
-        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 self-start")
+        ? "self-end border-transparent bg-[#9CB7C9] text-white"
+        : "self-start border-white/10 bg-white/5 text-neutral-900 dark:text-neutral-100")
     }
   >
     {msg.content}
@@ -227,6 +228,7 @@ const ChatWidget: React.FC = () => {
   ]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = useCallback(() => {
     setIsOpen((v) => !v);
@@ -301,11 +303,21 @@ const ChatWidget: React.FC = () => {
     }
   }, [handleSend]);
 
+  useEffect(() => {
+    // Auto-scroll to bottom whenever messages update or panel opens
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    // schedule after layout
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [messages, isOpen]);
+
   return (
     <Container>
       <div className="flex flex-col items-end gap-3">
         <Panel isOpen={isOpen} handleClose={() => setIsOpen(false)}>
-          <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/5 dark:bg-white/5">
             <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">AI Assistant</div>
             <button
               type="button"
@@ -323,12 +335,12 @@ const ChatWidget: React.FC = () => {
               ✕
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 bg-neutral-50/60 dark:bg-neutral-900/40">
+          <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
             {messages.map((m, i) => (
               <MessageBubble key={i} msg={m} />
             ))}
           </div>
-          <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="p-3 border-t border-white/10 bg-white/5 dark:bg-white/5">
             <div className="flex items-end gap-2">
               <textarea
                 aria-label="Type your message"
@@ -337,7 +349,7 @@ const ChatWidget: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Ask about projects, certifications, or the site..."
-                className="w-full resize-none rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-10 max-h-28"
+                className="w-full resize-none rounded-md border border-white/20 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#9CB7C9] placeholder:text-white/40 min-h-10 max-h-28"
               />
               <button
                 type="button"
@@ -346,8 +358,10 @@ const ChatWidget: React.FC = () => {
                 disabled={!canSend}
                 onClick={() => void handleSend()}
                 className={
-                  "rounded-md px-3 py-2 text-sm font-medium text-white " +
-                  (canSend ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400 cursor-not-allowed")
+                  "rounded-md px-3 py-2 text-sm font-medium " +
+                  (canSend
+                    ? "bg-[#9CB7C9] text-[#1C1C1C] hover:bg-[#8BA5B7]"
+                    : "bg-white/10 text-white/50 cursor-not-allowed")
                 }
               >
                 Send
