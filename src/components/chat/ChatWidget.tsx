@@ -228,6 +228,7 @@ const ChatWidget: React.FC = () => {
   ]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = useCallback(() => {
@@ -241,7 +242,11 @@ const ChatWidget: React.FC = () => {
     }
   }, [handleToggle]);
 
-  const canSend = useMemo(() => input.trim().length > 0 && !isSending, [input, isSending]);
+  const canSend = useMemo(() => {
+    const hasText = input.trim().length > 0;
+    const inCooldown = cooldownUntil ? Date.now() < cooldownUntil : false;
+    return hasText && !isSending && !inCooldown;
+  }, [input, isSending, cooldownUntil]);
 
   const handleSend = useCallback(async () => {
     const text = input.trim();
@@ -262,6 +267,17 @@ const ChatWidget: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: nextMessages }),
       });
+      if (res.status === 429) {
+        const resetSec = Number(res.headers.get("X-RateLimit-Reset") ?? "0");
+        const resetMs = (resetSec > 0 ? resetSec * 1000 : Date.now() + 15000);
+        setCooldownUntil(resetMs);
+        const wait = Math.max(0, Math.ceil((resetMs - Date.now()) / 1000));
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          { role: "assistant", content: `You’re sending too fast. Please wait ${wait}s.` },
+        ]);
+        return;
+      }
       if (!res.ok || !res.body) {
         throw new Error("Failed to get response");
       }

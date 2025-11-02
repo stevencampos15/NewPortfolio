@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getOpenAIClient } from "@/lib/openai";
 import { embedText } from "@/lib/embeddings";
 import { getPineconeNamespace, type RetrievalMatch } from "@/lib/pinecone";
+import { checkCombinedLimits, getClientIdentifier } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 
@@ -47,6 +48,16 @@ const buildContext = (sources: RetrievalMatch[]): string => {
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit guard: 10/min and 200/day per IP
+    const id = getClientIdentifier(req);
+    const { allowed, headers: limitHeaders } = await checkCombinedLimits(id);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded" }),
+        { status: 429, headers: limitHeaders }
+      );
+    }
+
     const body = await req.json().catch(() => ({}));
     const messages = (body?.messages as ChatMessage[] | undefined) ?? [];
     const lastUser = [...messages].reverse().find((m) => m.role === "user");
@@ -110,12 +121,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-store",
-      },
-    });
+    const successHeaders = new Headers(limitHeaders);
+    successHeaders.set("Content-Type", "text/plain; charset=utf-8");
+    successHeaders.set("Cache-Control", "no-store");
+    return new Response(stream, { headers: successHeaders });
   } catch (err: any) {
     const message = err?.message ?? "Unexpected error";
     return new Response(message, { status: 500 });

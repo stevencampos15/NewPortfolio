@@ -34,3 +34,37 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Chat Rate Limiting (Upstash)
+
+This project uses Upstash Redis Ratelimit to protect the chat API with:
+
+- 10 requests per minute per IP
+- 200 requests per day per IP
+
+### Setup
+
+1. Create a Redis database in Upstash and copy the REST URL and token.
+2. Add the following to `.env.local` (do not commit):
+
+```
+UPSTASH_REDIS_REST_URL=YOUR_URL
+UPSTASH_REDIS_REST_TOKEN=YOUR_TOKEN
+```
+
+3. Install dependencies:
+
+```
+npm i @upstash/redis @upstash/ratelimit
+```
+
+### How it works
+
+- The rate limit check runs at the top of `src/app/api/chat/route.ts`.
+- When the limit is exceeded, the API returns `429` with headers:
+  - `X-RateLimit-Limit: minute=10, day=200`
+  - `X-RateLimit-Remaining`
+  - `X-RateLimit-Reset` (epoch seconds)
+  - `Retry-After` (seconds)
+- The client reads these headers and shows a friendly message with a wait time.
+
