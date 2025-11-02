@@ -1,11 +1,19 @@
 import { NextRequest } from "next/server";
 import dns from "node:dns/promises";
 import { extractDomainFromEmail, isDisposableDomain, isEmailSyntaxValid } from "@/lib/emailValidation";
+import { checkCombinedLimits, getClientIdentifier } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit to protect DNS resolution from abuse
+    const id = getClientIdentifier(req);
+    const { allowed, headers } = await checkCombinedLimits(id);
+    if (!allowed) {
+      return Response.json({ ok: false, reason: "rate_limited" }, { status: 429, headers });
+    }
+
     const body = await req.json().catch(() => ({}));
     const email = String(body?.email ?? "").trim();
     if (!email) {
@@ -36,7 +44,11 @@ export async function POST(req: NextRequest) {
     }
 
     const ok = syntaxValid && mxFound && !disposable;
-    return Response.json({ ok, syntaxValid, disposable, mxFound }, { status: 200 });
+    // include rate-limit headers on success too
+    return new Response(JSON.stringify({ ok, syntaxValid, disposable, mxFound }), {
+      status: 200,
+      headers,
+    });
   } catch (err: any) {
     return Response.json({ ok: false, reason: "error", message: err?.message ?? "unexpected" }, { status: 500 });
   }
