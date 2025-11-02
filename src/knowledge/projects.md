@@ -1,8 +1,16 @@
+\# Projects
+
+Steven Has 3 projects enlisted.
+
+
+
 \## Project 1: Restoring Endpoint Visibility – Sophos Central
 
 
 
-Summary: Restored endpoint visibility for over 200 devices in Sophos Central by correlating NAC, Intune, and Active Directory data, identifying blocked communications, and remediating agent issues. Strengthened network protection and compliance for an international bank.
+\# Summary project 1
+
+Restored endpoint visibility for over 200 devices in Sophos Central by correlating NAC, Intune, and Active Directory data, identifying blocked communications, and remediating agent issues. Strengthened network protection and compliance for an international bank.
 
 Date: 2023
 
@@ -10,7 +18,7 @@ Tags: Sophos Central, Intune, NAC, Excel, Active Directory
 
 
 
-Context
+\# Context Project 1
 
 
 
@@ -18,7 +26,7 @@ While managing cybersecurity operations for an international bank with over 5,00
 
 
 
-Investigation
+\# Investigation project 1
 
 
 
@@ -28,7 +36,7 @@ Further investigation showed NAC only verified software installation, not commun
 
 
 
-Root Cause Analysis
+\# Root Cause Analysis Project 1
 
 
 
@@ -36,7 +44,7 @@ Log reviews showed Sophos agents couldn’t reach Sophos Central domains or inte
 
 
 
-Solution
+\# Solution Project 1
 
 
 
@@ -56,7 +64,7 @@ Worked with the network team to restore required access for updates and policy s
 
 
 
-Outcome
+\# Outcome Project 1
 
 
 
@@ -76,7 +84,7 @@ Tags: Workspace ONE, Android, MDM, Automation, AirWatch
 
 
 
-Context
+\# Context Project 2
 
 
 
@@ -84,7 +92,7 @@ The bank used corporate Android phones for customer document collection via What
 
 
 
-Problem
+\# Problem Project 2
 
 
 
@@ -92,7 +100,7 @@ The manual process was inefficient and error-prone. Devices lacked centralized p
 
 
 
-Solution
+\# Solution Project 2
 
 
 
@@ -116,7 +124,7 @@ Configured automated remote wipe and lockout for compromised devices.
 
 
 
-Outcome
+\# Outcome Project 2
 
 
 
@@ -136,7 +144,7 @@ Tags: Incident Response, DGA, Sophos Central, ExtraHop, Zscaler ZIA, Threat Inte
 
 
 
-Context
+\# Context Project 3
 
 
 
@@ -144,7 +152,7 @@ ExtraHop raised an alert for suspicious communication with a DGA domain within t
 
 
 
-Actions Taken
+\# Actions taken Project 3
 
 
 
@@ -176,7 +184,7 @@ Applied blocks across Sophos and perimeter firewalls.
 
 
 
-Outcome
+\# Outcome Project 3
 
 
 

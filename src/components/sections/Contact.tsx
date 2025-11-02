@@ -1,9 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
+import emailjs from "@emailjs/browser"
 
 // Social media icons component
 const SocialIcon = ({ type }: { type: 'github' | 'linkedin' | 'instagram' | 'twitter' }) => {
@@ -49,10 +50,120 @@ export default function Contact() {
     message: "",
   })
 
+  const [isSending, setIsSending] = useState(false)
+  const [statusMsg, setStatusMsg] = useState<string | null>(null)
+  const [toastMsg, setToastMsg] = useState<string | null>(null)
+  const [honeypot, setHoneypot] = useState("")
+  const [formStartMs] = useState<number>(() => Date.now())
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null)
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
+
+  const verifyEmailDeliverability = async (email: string): Promise<boolean> => {
+    const trimmed = email.trim()
+    if (!trimmed) {
+      setEmailError("Email is required.")
+      return false
+    }
+    setIsCheckingEmail(true)
+    setEmailError(null)
+    try {
+      const res = await fetch("/api/verify-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!data?.ok) {
+        if (data?.reason === "syntax" || data?.syntaxValid === false) {
+          setEmailError("Enter a valid email address.")
+        } else if (data?.disposable) {
+          setEmailError("Disposable email addresses are not allowed.")
+        } else if (data?.mxFound === false) {
+          setEmailError("This email domain cannot receive messages.")
+        } else {
+          setEmailError("Could not verify this email. Please try another.")
+        }
+        return false
+      }
+      setEmailError(null)
+      return true
+    } catch {
+      // If verification API fails, do not block the user, but warn
+      setEmailError("Could not verify this email at the moment.")
+      return false
+    } finally {
+      setIsCheckingEmail(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Add your form submission logic here
-    console.log("Form submitted:", formData)
+    if (isSending) return
+
+    // Anti-bot guards (client-side): honeypot + minimum fill time + brief cooldown
+    if (honeypot.trim().length > 0) {
+      setStatusMsg("Submission blocked.")
+      return
+    }
+    const elapsedMs = Date.now() - formStartMs
+    if (elapsedMs < 2500) {
+      setStatusMsg("Please take a moment to complete the form and try again.")
+      return
+    }
+    if (cooldownUntil && Date.now() < cooldownUntil) {
+      const wait = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000))
+      setStatusMsg(`Please wait ${wait}s before sending again.`)
+      return
+    }
+
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string
+
+    if (!serviceId || !templateId || !publicKey) {
+      setStatusMsg("Email service is not configured.")
+      return
+    }
+
+    if (!formData.name || !formData.email || !formData.message) {
+      setStatusMsg("Please fill in all fields.")
+      return
+    }
+
+    const emailOk = await verifyEmailDeliverability(formData.email)
+    if (!emailOk) {
+      setStatusMsg("Please provide a valid, deliverable email.")
+      return
+    }
+
+    setIsSending(true)
+    setStatusMsg(null)
+
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          reply_to: formData.email,
+          message: formData.message,
+          site_name: "Steven Campos Portfolio",
+        },
+        { publicKey }
+      )
+
+      setStatusMsg("Message sent! I’ll get back to you soon.")
+      setToastMsg("Message sent! I’ll get back to you soon.")
+      setTimeout(() => setToastMsg(null), 3200)
+      setFormData({ name: "", email: "", message: "" })
+      // start a short cooldown to deter rapid submissions
+      setCooldownUntil(Date.now() + 10_000)
+    } catch (err) {
+      setStatusMsg("Sorry—could not send your message. Please try again.")
+    } finally {
+      setIsSending(false)
+    }
   }
 
   const socialLinks = [
@@ -142,6 +253,16 @@ export default function Contact() {
             </motion.div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot field (hidden from users) */}
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                aria-hidden
+                className="hidden"
+              />
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2 text-foreground/80 dark:text-gray-300">
                   {t('contact.form.name')}
@@ -165,9 +286,16 @@ export default function Contact() {
                   id="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full py-2 px-4 bg-black text-white dark:bg-[#2A2A2A] border border-[#9CB7C9]/20 focus:border-[#9CB7C9] rounded-lg transition-colors focus:outline-none"
+                  onBlur={async () => { if (formData.email) { await verifyEmailDeliverability(formData.email) } }}
+                  className={
+                    "w-full py-2 px-4 bg-black text-white dark:bg-[#2A2A2A] rounded-lg transition-colors focus:outline-none " +
+                    (emailError ? "border border-red-500 focus:border-red-500" : "border border-[#9CB7C9]/20 focus:border-[#9CB7C9]")
+                  }
                   required
                 />
+                {emailError && (
+                  <p className="mt-1 text-xs text-red-400" role="alert">{emailError}</p>
+                )}
               </div>
               
               <div>
@@ -186,14 +314,37 @@ export default function Contact() {
               
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-[#9CB7C9] text-[#1C1C1C] rounded-lg font-medium hover:bg-[#8BA5B7] transition-colors"
+                disabled={isSending || isCheckingEmail}
+                aria-disabled={isSending || isCheckingEmail}
+                className="w-full px-6 py-3 bg-[#9CB7C9] text-[#1C1C1C] rounded-lg font-medium hover:bg-[#8BA5B7] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {t('contact.form.send')}
+                {isSending ? "Sending…" : (isCheckingEmail ? "Verifying…" : t('contact.form.send'))}
               </button>
+              {statusMsg && (
+                <p role="status" aria-live="polite" className="text-sm text-foreground/80 dark:text-gray-300">
+                  {statusMsg}
+                </p>
+              )}
             </form>
           </div>
         </motion.div>
       </div>
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            key="contact-toast"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            role="status"
+            aria-live="polite"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#9CB7C9] text-[#1C1C1C] rounded-md shadow-lg px-4 py-2"
+          >
+            {toastMsg}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 } 
