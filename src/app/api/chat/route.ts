@@ -10,8 +10,8 @@ type ChatMessage = {
   content: string;
 };
 
-const MIN_SCORE = 0.75;
-const TOP_K = 8;
+const MIN_SCORE = 0.6;
+const TOP_K = 12;
 
 const buildSystemPrompt = (sources: RetrievalMatch[]): string => {
   const citations = sources
@@ -69,13 +69,15 @@ export async function POST(req: NextRequest) {
 
     const matches = (result.matches ?? []) as RetrievalMatch[];
     const strong = matches.filter((m) => (m.score ?? 0) >= MIN_SCORE);
+    // Fallback: if nothing crosses threshold, take the best few results
+    const selected = strong.length > 0 ? strong : matches.slice(0, Math.min(5, matches.length));
 
-    const context = buildContext(strong);
-    const systemPrompt = buildSystemPrompt(strong);
+    const context = buildContext(selected);
+    const systemPrompt = buildSystemPrompt(selected);
 
     const ragIntro = context
       ? `Use ONLY the following context to answer. If insufficient, ask a brief clarifying question.\n\n${context}`
-      : `No reliable context found above threshold. Ask a brief clarifying question to narrow what the user needs.`;
+      : `No context available. Ask a brief clarifying question to better understand what the user needs.`;
 
     const trimmedHistory = messages.slice(-10).filter((m) => m.role !== "system");
     const finalMessages: ChatMessage[] = [

@@ -29,7 +29,8 @@ async function createIndex() {
   const existing = await pc.listIndexes();
   if (existing.indexes?.some((i) => i.name === INDEX_NAME)) {
     const desc = await pc.describeIndex(INDEX_NAME);
-    const currentDim = desc?.spec?.dimension ?? desc?.dimension;
+    const anyDesc: any = desc as any;
+    const currentDim = anyDesc?.spec?.dimension ?? anyDesc?.dimension ?? anyDesc?.status?.dimension;
     if (currentDim && currentDim !== DIMENSION) {
       console.error(
         `Index '${INDEX_NAME}' exists with dimension ${currentDim}, expected ${DIMENSION}.\n` +
