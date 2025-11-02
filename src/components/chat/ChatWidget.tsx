@@ -1,11 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
 };
+
+type IconPhase = "eyes-open" | "eyes-left" | "eyes-right" | "eyes-closed" | "question";
+
+const ICON_SEQUENCE: ReadonlyArray<{ phase: IconPhase; durationMs: number }> = [
+  { phase: "eyes-open", durationMs: 1400 },
+  { phase: "eyes-right", durationMs: 420 },
+  { phase: "eyes-left", durationMs: 520 },
+  { phase: "eyes-open", durationMs: 600 },
+  { phase: "eyes-closed", durationMs: 140 },
+  { phase: "eyes-open", durationMs: 260 },
+  { phase: "question", durationMs: 1400 },
+  { phase: "eyes-open", durationMs: 1600 },
+];
 
 const INITIAL_ASSISTANT_MESSAGE =
   "Hi! I’m your portfolio assistant. Ask me about Steven’s projects, experience, or this website.";
@@ -18,35 +32,144 @@ const FloatingButton: React.FC<{
   isOpen: boolean;
   handleClick: () => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
-}> = ({ isOpen, handleClick, handleKeyDown }) => (
-  <button
-    type="button"
-    aria-label={isOpen ? "Close chat" : "Open chat"}
-    tabIndex={0}
-    onClick={handleClick}
-    onKeyDown={handleKeyDown}
-    className="rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 h-12 w-12 flex items-center justify-center"
-  >
-    <span className="sr-only">{isOpen ? "Close chat" : "Open chat"}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="h-6 w-6"
-      aria-hidden
+}> = ({ isOpen, handleClick, handleKeyDown }) => {
+  const [iconPhase, setIconPhase] = useState<IconPhase>("eyes-open");
+  const [sequenceIndex, setSequenceIndex] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) return; // pause animation when panel is open
+
+    const current = ICON_SEQUENCE[sequenceIndex];
+    setIconPhase(current.phase);
+
+    const timeoutId = window.setTimeout(() => {
+      setSequenceIndex((idx) => (idx + 1) % ICON_SEQUENCE.length);
+    }, current.durationMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [sequenceIndex, isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      // reset when closing the panel
+      setIconPhase("eyes-open");
+      setSequenceIndex(0);
+    }
+  }, [isOpen]);
+
+  const eyeOffset = iconPhase === "eyes-left" ? -1.2 : iconPhase === "eyes-right" ? 1.2 : 0;
+
+  return (
+    <button
+      type="button"
+      aria-label={isOpen ? "Close chat" : "Open chat"}
+      aria-pressed={isOpen}
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      className="relative h-12 w-12 rounded-full flex items-center justify-center text-[#9CB7C9] transition
+                 focus:outline-none focus:ring-2 focus:ring-[#9CB7C9] focus:ring-offset-2 focus:ring-offset-transparent
+                 hover:text-[#8BA5B7]
+                 shadow-[0_0_12px_rgba(156,183,201,0.70),0_0_24px_rgba(156,183,201,0.35)]
+                 before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-[rgba(156,183,201,0.12)] before:blur-lg before:pointer-events-none"
     >
+      <span className="sr-only">{isOpen ? "Close chat" : "Open chat"}</span>
       {isOpen ? (
-        <path
-          fillRule="evenodd"
-          d="M6.225 4.811a1 1 0 0 1 1.414 0L12 9.172l4.36-4.36a1 1 0 1 1 1.415 1.415L13.415 10.6l4.36 4.36a1 1 0 0 1-1.415 1.415L12 12.015l-4.36 4.36a1 1 0 0 1-1.415-1.414l4.361-4.36-4.36-4.36a1 1 0 0 1 0-1.415Z"
-          clipRule="evenodd"
-        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-5 w-5"
+          aria-hidden
+        >
+          <path d="M6 6L18 18" />
+          <path d="M18 6L6 18" />
+        </svg>
       ) : (
-        <path d="M2.25 12.76c0 1.264.474 2.423 1.26 3.31V21l4.93-2.466c.15.01.3.016.455.016 4.28 0 7.75-3.05 7.75-6.81S13.175 4.93 8.895 4.93c-4.28 0-7.75 3.05-7.75 6.81Z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="h-6 w-6"
+          aria-hidden
+        >
+          {/* Outer neon chat-bubble ring */}
+          <path
+            d="M12 4.5c-4.694 0-8.5 3.24-8.5 7.25 0 2.13 1.086 4.02 2.86 5.3l-.66 2.9a.75.75 0 0 0 1.02.86l3.05-1.26c.716.16 1.476.25 2.28.25 4.694 0 8.5-3.24 8.5-7.3 0-4.01-3.806-7.25-8.5-7.25Z"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          <AnimatePresence mode="wait" initial={false}>
+            {iconPhase === "question" ? (
+              <motion.g
+                key="q"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.03 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+              >
+                {/* Question mark curve draws in */}
+                <motion.path
+                  d="M9.5 9.5a2.5 2.5 0 1 1 5 0c0 1.3-1 1.8-2 2.3-.8.4-1.3.9-1.3 1.7v.7"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.45, ease: "easeInOut" }}
+                />
+                {/* Question mark dot pops in */}
+                <motion.circle
+                  cx="12"
+                  cy="16.8"
+                  r="0.9"
+                  fill="currentColor"
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.25, duration: 0.2 }}
+                />
+              </motion.g>
+            ) : iconPhase === "eyes-closed" ? (
+              <motion.g
+                key="eyes-closed"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+              >
+                {/* Closed eyes */}
+                <rect x="8.6" y="12.1" width="2.2" height="0.9" rx="0.45" fill="currentColor" />
+                <rect x="13.2" y="12.1" width="2.2" height="0.9" rx="0.45" fill="currentColor" />
+              </motion.g>
+            ) : (
+              <motion.g
+                key="eyes-open"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+              >
+                {/* Open eyes that glance left/right by translating the group */}
+                <motion.g animate={{ x: eyeOffset }} transition={{ type: "spring", stiffness: 340, damping: 22 }}>
+                  <rect x="8.9" y="10" width="1.8" height="4.2" rx="0.9" fill="currentColor" />
+                  <rect x="13.3" y="10" width="1.8" height="4.2" rx="0.9" fill="currentColor" />
+                </motion.g>
+              </motion.g>
+            )}
+          </AnimatePresence>
+        </svg>
       )}
-    </svg>
-  </button>
-);
+    </button>
+  );
+};
 
 const Panel: React.FC<{ children: React.ReactNode; isOpen: boolean } & {
   handleClose: () => void;

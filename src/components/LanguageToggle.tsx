@@ -13,7 +13,8 @@ export default function LanguageToggle() {
   return (
     <motion.button
       onClick={toggleLanguage}
-      className="fixed bottom-4 right-4 z-50 px-4 py-2 rounded-full bg-[#9CB7C9] text-[#1C1C1C] hover:bg-[#8BA5B7] transition-colors"
+      aria-label="Toggle language"
+      className="fixed bottom-4 left-4 z-50 px-4 py-2 rounded-full bg-[#9CB7C9] text-[#1C1C1C] hover:bg-[#8BA5B7] transition-colors"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >

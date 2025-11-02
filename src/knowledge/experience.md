@@ -1,174 +1,116 @@
-Date: Aug 2015 – Feb 2016
+\# Professional Experience
 
 
 
-Role: Deputy Technology Manager \& Administrative Assistant
+\## Cybersecurity Specialist  
 
+\*\*SISAP SA de CV\*\* — \*April 2023 – Present\*  
 
 
-Job: Developed a secured, web based Student Management and Billing System, implementing authentication, role-based access controls, and input validation to safeguard sensitive academic and financial data. I also, Collaborated with administrative teams to automate workflows and maintain compliance with internal information security policies.
 
+Provided cybersecurity support for an international banking client, managing and monitoring tools such as \*\*Sophos Central\*\*, \*\*Palo Alto\*\*, \*\*Zscaler\*\*, and \*\*Symantec DLP\*\*.  
 
+Responsibilities include:
 
-Place: UTLA
+\- Overseeing security policy deployment and \*\*mobile device management (Workspace ONE)\*\*.  
 
+\- Managing \*\*perimeter defense\*\* with \*\*Arbor Edge Defense\*\*.  
 
+\- Performing \*\*data analysis\*\* and reporting to enhance threat visibility, compliance, and network protection.  
 
-\#Java #MySQL #SecureDevelopment #WebSecurity #DataIntegrity
 
 
+\*\*Key Skills:\*\* Cybersecurity, Firewalls, DLP, Zscaler, MDM, Network Security, Incident Response
 
-&nbsp;
 
 
+---
 
-Date: Aug 2017- Aug 2018
 
 
+\## IT Support Specialist  
 
-Role: Sales Specialist – North American Market
+\*\*The Office Gurus\*\* — \*February 2022 – April 2023\*  
 
 
 
-Job: While in a sales role, I ensured data privacy and secure handling of client information, as well as an enhanced social engineering awareness and communication, and I obtained a strengthened problem-solving and ethical responsibility when handling sensitive customer data.
+Delivered comprehensive IT support in a \*\*Windows-based environment\*\*, managing hardware, software, network, and application issues to ensure secure and reliable operations.  
 
+Key achievements:
 
+\- Provided \*\*VPN and remote access\*\* assistance for distributed teams.  
 
-Place: Focus Services
+\- Maintained \*\*Active Directory\*\* and \*\*Office 365\*\* environments.  
 
+\- Applied regular patches and configurations to strengthen \*\*endpoint protection\*\* and prevent security incidents.  
 
+\- Developed strong foundations in \*\*incident response\*\*, \*\*system hardening\*\*, and \*\*user security awareness\*\*.  
 
-\#DataPrivacy #SocialEngineeringAwareness #Communication
 
 
+\*\*Key Skills:\*\* Active Directory, Office 365, VPN, Windows Support, Endpoint Security, Incident Response
 
-&nbsp;
 
 
+---
 
-Date: Sept 2020 - Dec 2021
 
 
+\## Consultant – Cybersecurity  
 
-Role: Consultant - Cybersecurity
+\*\*Intelector El Salvador, SA\*\* — \*September 2020 – December 2021\*  
 
 
 
-Job: Provided consultancy and technical support for F5 services, focusing on load balancing and Web Application Firewall (WAF) configuration and optimization.
+Delivered consultancy and technical support for \*\*F5\*\* services, specializing in \*\*load balancing\*\* and \*\*web application firewall (WAF)\*\* configuration using \*\*Nginx\*\* and \*\*F5\*\*.  
 
+Contributed to improving \*\*network security\*\*, \*\*application performance\*\*, and \*\*high availability\*\* for multiple client environments.  
 
 
-Resolved support tickets involving network security, performance issues, and system integrations, ensuring service availability and compliance with security policies.
 
+\*\*Key Skills:\*\* F5, WAF, Load Balancing, Nginx, Network Security
 
 
-Collaborated with internal and client teams to enhance application security posture and maintain resilient, high-availability environments.
 
+---
 
 
-Place: Intelector El Salvador, SA
 
+\## Sales Specialist – North American Market  
 
+\*\*Focus Services\*\* — \*August 2017 – August 2018\*  
 
-\#F5 #WAF #LoadBalancing #Nginx #NetworkSecurity
 
 
+While in a sales role, emphasized \*\*data privacy\*\* and \*\*secure handling of client information\*\*. Strengthened \*\*social engineering awareness\*\*, effective communication, and ethical responsibility in dealing with sensitive customer data.  
 
-&nbsp;
 
 
+\*\*Key Skills:\*\* Data Privacy, Social Engineering Awareness, Communication
 
-Date: 2022
 
 
+---
 
-Bachelor’s in Information Technology
 
 
+\## Deputy Technology Manager \& Administrative Assistant  
 
-Completed a Bachelor’s degree in Information Technology, gaining a strong foundation in computer systems, networks, programming, cybersecurity and information security principles.
+\*\*UTLA\*\* — \*August 2015 – February 2016\*  
 
 
 
-Place: Universidad Jose Matias Delgado
+Developed a secured, web-based \*\*Student Management and Billing System\*\*, implementing:
 
+\- \*\*Authentication\*\* and \*\*role-based access controls\*\*
 
+\- \*\*Input validation\*\* to prevent injection and unauthorized access
 
-\#InformationTechnology #Networking #SoftwareDevelopment #CybersecurityFundamentals
+\- Automated administrative workflows to maintain compliance with internal security policies  
 
 
 
-&nbsp;
+\*\*Key Skills:\*\* Java, MySQL, Secure Development, Web Security, Data Integrity
 
 
-
-Date: Feb 2022 - APR 2023
-
-
-
-Role: IT Support Specialist
-
-
-
-Delivered comprehensive IT support in a Windows-based environment, managing hardware, software, network, and application issues while ensuring secure and reliable operations. Provided VPN and remote access assistance, maintained Active Directory and Office 365 environments, and applied patches to strengthen endpoint protection. Gained solid experience in incident response, system hardening, and user security awareness.
-
-
-
-Place: The Office Gurus
-
-
-
-\#ActiveDirectory #Office365 #VPN #WindowsSupport #EndpointSecurity #IncidentResponse
-
-
-
-&nbsp;
-
-
-
-Date: APR 2023 - Present
-
-
-
-Role: Cybersecurity Specialist
-
-
-
-Job:
-
-
-
-Provide cybersecurity engineering and support for an international banking client, ensuring high standards of protection, compliance, and threat mitigation.
-
-
-
-Administer and monitor security tools including Sophos Central, Sophos XG Firewalls, Active Directory, Symantec DLP, Zscaler ZIA, and Palo Alto Firewalls.
-
-
-
-Manage policy deployment and mobile device management (MDM) through VMware Workspace ONE, enforcing endpoint and mobile security compliance.
-
-
-
-Perform data analytics and reporting using advanced Excel to support decision-making and incident tracking.
-
-
-
-Oversee perimeter network protection with Arbor Edge Defense (AED), strengthening resilience against DDoS and external threats.
-
-
-
-Collaborate with internal and client teams to maintain network integrity, data confidentiality, and regulatory compliance within a critical financial infrastructure.
-
-
-
-&nbsp;
-
-
-
-Provide cybersecurity support for an international banking client, managing and monitoring tools like Sophos Central, Palo Alto, Zscaler, and Symantec DLP. Oversee policy deployment, MDM (Workspace ONE), and perimeter defense with Arbor Edge Defense. Perform data analysis and reporting to strengthen threat visibility, compliance, and network protection.
-
-
-
-Place: SISAP
 
