@@ -1,194 +1,76 @@
-\# Projects
+# Projects
 
-Steven Has 3 projects enlisted.
+Below are representative projects with clear context, actions, and outcomes. Headings and concise bullets are used to improve retrieval quality.
 
+## Restoring Endpoint Visibility – Sophos Central
 
+- Timeline: 2023  
+- Tools: Sophos Central, Intune, NAC, Excel, Active Directory  
+- Summary: Restored endpoint visibility for 200+ devices by correlating NAC/Intune/AD data, fixing blocked communications and agent issues—strengthening protection and compliance for an international bank.
 
-\## Project 1: Restoring Endpoint Visibility – Sophos Central
+### Context
+While managing security for a bank with 5,000+ endpoints across multiple sites, several endpoints were not reporting to Sophos Central, meaning they missed updates and policy syncs.
 
+### Investigation
+- Correlated inventory across NAC, Intune, DLP, AD, and Sophos Central to build a cross-platform view.  
+- Found devices present in other consoles but absent in Sophos Central.  
+- Identified that NAC verified only software installation, not active communication, so disconnected endpoints weren’t quarantined.
 
+### Root Cause
+Sophos agents could not reach Sophos Central domains/internal update servers after network policy changes that restricted bandwidth and blocked traffic.
 
-\# Summary project 1
+### Solution
+- Mapped endpoint IPs to physical sites using network data to coordinate remediation.  
+- Reinstalled and re-registered ~200 Sophos agents.  
+- Optimized update configurations to reduce bandwidth usage.  
+- Worked with the network team to restore required access for updates and policy synchronization.
 
-Restored endpoint visibility for over 200 devices in Sophos Central by correlating NAC, Intune, and Active Directory data, identifying blocked communications, and remediating agent issues. Strengthened network protection and compliance for an international bank.
+### Outcome
+Endpoint visibility was restored; updated security policies and filtering rules were enforced; misuse of corporate devices was identified. Security posture and bandwidth efficiency improved, and compliance was re‑established.
 
-Date: 2023
+---
 
-Tags: Sophos Central, Intune, NAC, Excel, Active Directory
+## Automation of Data Wiping and Policy Enforcement for Corporate Android Devices
 
+- Timeline: 2023  
+- Tools: VMware Workspace ONE (AirWatch), Android, MDM, Automation  
+- Summary: Automated secure data deletion and enforced MDM policies for corporate Android devices—eliminating manual work, reducing data exposure risk, and improving visibility across all branches.
 
+### Context
+Corporate Android phones collected customer documents via WhatsApp Business. Sensitive files were deleted manually each day; no centralized mobile policies existed.
 
-\# Context Project 1
+### Problem
+Manual deletion was error‑prone and non‑scalable; devices lacked centralized control, visibility, and compliance monitoring.
 
+### Solution
+- Designed MDM profiles in VMware Workspace ONE.  
+- Automated daily folder wipes to remove sensitive data.  
+- Enrolled all devices and assigned clear ownership.  
+- Implemented app restrictions and device health monitoring.  
+- Configured automated remote wipe/lockout for compromised devices.
 
+### Outcome
+Sensitive data deletion became automatic; IT gained full visibility and control. Employees could use phones off‑site safely with tracking and enforced policies. Data exposure risk and operational overhead were significantly reduced.
 
-While managing cybersecurity operations for an international bank with over 5,000 endpoints across multiple locations, I identified a visibility gap within Sophos Central — several endpoints were not reporting to the console. This meant those systems were not receiving critical security updates, posing a significant attack surface risk.
+---
 
+## DGA Domain Incident Response and Containment
 
+- Timeline: 2022  
+- Tools: Sophos Central, ExtraHop, Zscaler ZIA, Threat Intelligence sources  
+- Summary: Investigated and contained communications with a malicious DGA domain; isolated the endpoint, blocked IOCs, and improved threat detection practices.
 
-\# Investigation project 1
+### Context
+ExtraHop raised an alert for suspicious DGA domain traffic inside the corporate network that required immediate investigation and containment.
 
+### Actions
+- Queried endpoints with Sophos Central Live Discover to hunt for indicators.  
+- Identified one active connection to a confirmed malicious domain.  
+- Isolated the endpoint to prevent lateral movement.  
+- Executed live queries to analyze processes and data transfers; reviewed logs for exfiltration or spread.  
+- Cross‑referenced IOCs with threat intel; applied blocks across Sophos and perimeter firewalls.
 
+### Outcome
+Uncovered excessive privileges and unauthorized tooling on the affected endpoint, leading to tighter access controls and application restrictions. Zscaler ZIA was rolled out to improve visibility/detection, and response workflows were strengthened.
 
-I correlated data from multiple sources — NAC, Intune, DLP, Active Directory, and Sophos Central — to generate a cross-platform report. This revealed devices that appeared in other consoles but not in Sophos Central.
-
-Further investigation showed NAC only verified software installation, not communication status, meaning disconnected endpoints were not quarantined.
-
-
-
-\# Root Cause Analysis Project 1
-
-
-
-Log reviews showed Sophos agents couldn’t reach Sophos Central domains or internal update servers. Network policy changes had inadvertently blocked communication due to bandwidth restrictions.
-
-
-
-\# Solution Project 1
-
-
-
-Mapped endpoint IPs to physical sites using network data.
-
-
-
-Coordinated with IT to reinstall and re-register ~200 Sophos agents.
-
-
-
-Optimized update configurations to reduce bandwidth usage.
-
-
-
-Worked with the network team to restore required access for updates and policy sync.
-
-
-
-\# Outcome Project 1
-
-
-
-Restored endpoint visibility, redeployed updated security policies, enforced filtering rules, and identified misuse of corporate devices. This strengthened endpoint security, improved bandwidth efficiency, and re-established compliance.
-
-
-
-\## Project 2: Automation of Data Wiping and Policy Enforcement for Corporate Android Devices
-
-
-
-Summary: Automated secure data deletion and MDM policy enforcement for corporate Android phones using VMware Workspace ONE. Eliminated manual work, reduced data exposure risk, and improved compliance visibility across all branches.
-
-Date: 2023
-
-Tags: Workspace ONE, Android, MDM, Automation, AirWatch
-
-
-
-\# Context Project 2
-
-
-
-The bank used corporate Android phones for customer document collection via WhatsApp Business. Files were manually deleted daily to prevent data exposure, but no mobile management policies were in place.
-
-
-
-\# Problem Project 2
-
-
-
-The manual process was inefficient and error-prone. Devices lacked centralized policy control, visibility, and compliance monitoring.
-
-
-
-\# Solution Project 2
-
-
-
-Designed custom MDM profiles in VMware Workspace ONE.
-
-
-
-Automated daily folder wipes to remove sensitive data.
-
-
-
-Enrolled all devices and assigned clear ownership.
-
-
-
-Implemented security policies to restrict apps and monitor device health.
-
-
-
-Configured automated remote wipe and lockout for compromised devices.
-
-
-
-\# Outcome Project 2
-
-
-
-Improved data security and efficiency across branches. Sensitive data was deleted automatically, and IT gained full visibility and control. Employees could use phones off-site safely, with tracking and enforced policies.
-
-
-
-\## Project 3: DGA Domain Incident Response and Containment
-
-
-
-Summary: Investigated and contained communication with a malicious DGA domain using Sophos Central, ExtraHop, and Zscaler. Isolated the endpoint, blocked malicious indicators, and improved threat detection and response practices.
-
-Date: 2022
-
-Tags: Incident Response, DGA, Sophos Central, ExtraHop, Zscaler ZIA, Threat Intelligence
-
-
-
-\# Context Project 3
-
-
-
-ExtraHop raised an alert for suspicious communication with a DGA domain within the corporate network, requiring immediate response.
-
-
-
-\# Actions taken Project 3
-
-
-
-Searched endpoints using Sophos Central Live Discover.
-
-
-
-Identified one active connection to a confirmed malicious domain.
-
-
-
-Isolated the endpoint to prevent lateral movement.
-
-
-
-Executed live queries to analyze processes and data transfers.
-
-
-
-Reviewed endpoint logs for signs of exfiltration or spread.
-
-
-
-Cross-referenced IOCs using threat intel sources.
-
-
-
-Applied blocks across Sophos and perimeter firewalls.
-
-
-
-\# Outcome Project 3
-
-
-
-Discovered excessive privileges and unauthorized tools on the affected endpoint. Implemented tighter access controls and application restrictions.
-
-Zscaler ZIA was deployed to enhance visibility and detection. This incident improved detection workflows and reinforced endpoint visibility practices.
 
