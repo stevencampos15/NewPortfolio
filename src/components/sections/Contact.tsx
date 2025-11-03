@@ -281,10 +281,6 @@ export default function Contact() {
                   <span className="text-[#9CB7C9]">📍</span>
                   {t('contact.location')}
                 </p>
-                <p className="flex items-center gap-2 text-foreground/80 dark:text-gray-300">
-                  <span className="text-[#9CB7C9]">📧</span>
-                  stevencampos15@gmail.com
-                </p>
               </div>
               
               <div className="mt-8">
