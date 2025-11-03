@@ -8,6 +8,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import ChatWidget from "@/components/chat/ChatWidget";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default async function RootLayout({
             <ThemeToggle />
             {children}
               <ChatWidget />
+            <Analytics />
           </LanguageProvider>
         </ThemeProvider>
       </body>
