@@ -13,6 +13,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Steven Campos - Portfolio",
   description: "Cybersecurity Specialist Portfolio - Steven Campos",
+  icons: {
+    icon: "/images/SC-Logo.ico",
+    shortcut: "/images/SC-Logo.ico",
+  },
 };
 
 export default function RootLayout({

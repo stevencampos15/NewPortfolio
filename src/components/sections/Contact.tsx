@@ -2,9 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
-import emailjs from "@emailjs/browser"
 
 // Social media icons component
 const SocialIcon = ({ type }: { type: 'github' | 'linkedin' | 'instagram' | 'twitter' }) => {
@@ -58,6 +57,45 @@ export default function Contact() {
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null)
   const [isCheckingEmail, setIsCheckingEmail] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const widgetContainerRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<any>(null)
+
+  // Load Cloudflare Turnstile script and render widget
+  useEffect(() => {
+    const render = () => {
+      const w: any = typeof window !== 'undefined' ? (window as any) : null
+      if (!w?.turnstile || !widgetContainerRef.current || widgetIdRef.current) return
+      const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string
+      if (!siteKey) return
+      widgetIdRef.current = w.turnstile.render(widgetContainerRef.current, {
+        sitekey: siteKey,
+        callback: (token: string) => setTurnstileToken(token),
+        'error-callback': () => setTurnstileToken(null),
+        'expired-callback': () => setTurnstileToken(null),
+        theme: 'auto',
+        size: 'flexible',
+      })
+    }
+
+    const w: any = typeof window !== 'undefined' ? (window as any) : null
+    if (w?.turnstile) {
+      render()
+      return
+    }
+    const existing = document.querySelector('script[data-turnstile]') as HTMLScriptElement | null
+    if (existing) {
+      existing.addEventListener('load', render, { once: true })
+      return
+    }
+    const script = document.createElement('script')
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+    script.async = true
+    script.defer = true
+    script.setAttribute('data-turnstile', '1')
+    script.addEventListener('load', render, { once: true })
+    document.head.appendChild(script)
+  }, [])
 
   const verifyEmailDeliverability = async (email: string): Promise<boolean> => {
     const trimmed = email.trim()
@@ -117,14 +155,7 @@ export default function Contact() {
       return
     }
 
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string
-
-    if (!serviceId || !templateId || !publicKey) {
-      setStatusMsg("Email service is not configured.")
-      return
-    }
+    // Switch to server-side proxy API for sending mail
 
     if (!formData.name || !formData.email || !formData.message) {
       setStatusMsg("Please fill in all fields.")
@@ -137,21 +168,34 @@ export default function Contact() {
       return
     }
 
+    if (!turnstileToken) {
+      setStatusMsg("Please complete the verification challenge.")
+      return
+    }
+
     setIsSending(true)
     setStatusMsg(null)
 
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name,
-          reply_to: formData.email,
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
           message: formData.message,
-          site_name: "Steven Campos Portfolio",
-        },
-        { publicKey }
-      )
+          turnstileToken,
+        }),
+      })
+      if (res.status === 429) {
+        setStatusMsg("You’re sending too fast. Please try again later.")
+        return
+      }
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data?.ok) {
+        setStatusMsg("Sorry—could not send your message. Please try again.")
+        return
+      }
 
       setStatusMsg("Message sent! I’ll get back to you soon.")
       setToastMsg("Message sent! I’ll get back to you soon.")
@@ -159,6 +203,14 @@ export default function Contact() {
       setFormData({ name: "", email: "", message: "" })
       // start a short cooldown to deter rapid submissions
       setCooldownUntil(Date.now() + 10_000)
+      // reset challenge for a new token next submit
+      try {
+        const w: any = typeof window !== 'undefined' ? (window as any) : null
+        if (w?.turnstile && widgetIdRef.current) {
+          w.turnstile.reset(widgetIdRef.current)
+          setTurnstileToken(null)
+        }
+      } catch {}
     } catch (err) {
       setStatusMsg("Sorry—could not send your message. Please try again.")
     } finally {
@@ -312,6 +364,8 @@ export default function Contact() {
                 />
               </div>
               
+              <div ref={widgetContainerRef} className="my-2" />
+
               <button
                 type="submit"
                 disabled={isSending || isCheckingEmail}
