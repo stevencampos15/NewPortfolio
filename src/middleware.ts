@@ -6,6 +6,9 @@ export function middleware(req: NextRequest) {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   const nonce = btoa(String.fromCharCode(...Array.from(bytes)));
   const requestHeaders = new Headers(req.headers);
+  // Provide nonce header that Next.js recognizes for auto-attaching to inline scripts
+  requestHeaders.set("x-nonce", nonce);
+  // Keep legacy header for client access
   requestHeaders.set("x-csp-nonce", nonce);
 
   const res = NextResponse.next({ request: { headers: requestHeaders } });

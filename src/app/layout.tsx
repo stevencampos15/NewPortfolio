@@ -26,7 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const hdrs = await headers();
-  const nonce = hdrs.get("x-csp-nonce") || undefined;
+  const nonce = hdrs.get("x-nonce") || hdrs.get("x-csp-nonce") || undefined;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
