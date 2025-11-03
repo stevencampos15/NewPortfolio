@@ -20,12 +20,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const nonce = headers().get("x-csp-nonce") || undefined;
+  const hdrs = await headers();
+  const nonce = hdrs.get("x-csp-nonce") || undefined;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
