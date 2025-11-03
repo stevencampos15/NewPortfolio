@@ -199,7 +199,7 @@ type PanelProps = {
   isOpen: boolean;
   handleClose: () => void;
   messages: ReadonlyArray<ChatMessage>;
-  messagesContainerRef: React.RefObject<HTMLDivElement>;
+  messagesContainerRef: React.MutableRefObject<HTMLDivElement | null>;
   input: string;
   setInput: (v: string) => void;
   canSend: boolean;
