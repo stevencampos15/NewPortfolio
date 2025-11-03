@@ -92,6 +92,10 @@ export default function Contact() {
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
     script.async = true
     script.defer = true
+    // add CSP nonce if present
+    const meta = document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null
+    const nonce = meta?.content
+    if (nonce) script.setAttribute('nonce', nonce)
     script.setAttribute('data-turnstile', '1')
     script.addEventListener('load', render, { once: true })
     document.head.appendChild(script)
