@@ -9,6 +9,7 @@ import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import ChatWidget from "@/components/chat/ChatWidget";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
             {children}
               <ChatWidget />
             <Analytics />
+            <SpeedInsights />
           </LanguageProvider>
         </ThemeProvider>
       </body>
