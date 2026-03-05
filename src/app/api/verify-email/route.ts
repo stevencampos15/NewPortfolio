@@ -49,9 +49,9 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers,
     });
-  } catch (err: any) {
-    return Response.json({ ok: false, reason: "error", message: err?.message ?? "unexpected" }, { status: 500 });
+  } catch (err: unknown) {
+    console.error("verify-email API error", err);
+    return Response.json({ ok: false, reason: "error" }, { status: 500 });
   }
 }
-
 

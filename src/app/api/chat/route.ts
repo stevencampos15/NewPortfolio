@@ -49,6 +49,11 @@ const buildContext = (sources: RetrievalMatch[]): string => {
 
 export async function POST(req: NextRequest) {
   try {
+    const contentLength = Number(req.headers.get("content-length") ?? "0");
+    if (Number.isFinite(contentLength) && contentLength > 50_000) {
+      return new Response("Request too large.", { status: 413 });
+    }
+
     // Rate limit guard: 10/min and 200/day per IP
     const id = getClientIdentifier(req);
     const { allowed, headers: limitHeaders } = await checkCombinedLimits(id);
@@ -61,6 +66,19 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({}));
     const messages = (body?.messages as ChatMessage[] | undefined) ?? [];
+    if (!Array.isArray(messages) || messages.length === 0 || messages.length > 25) {
+      return new Response("Invalid chat payload.", { status: 400 });
+    }
+
+    const hasInvalidMessage = messages.some((m) => {
+      if (!m || (m.role !== "system" && m.role !== "user" && m.role !== "assistant")) return true;
+      if (typeof m.content !== "string") return true;
+      return m.content.length > 4_000;
+    });
+    if (hasInvalidMessage) {
+      return new Response("Invalid chat payload.", { status: 400 });
+    }
+
     const lastUser = [...messages].reverse().find((m) => m.role === "user");
     const userText = lastUser?.content?.trim() ?? "";
     if (!userText) {
@@ -126,10 +144,9 @@ export async function POST(req: NextRequest) {
     successHeaders.set("Content-Type", "text/plain; charset=utf-8");
     successHeaders.set("Cache-Control", "no-store");
     return new Response(stream, { headers: successHeaders });
-  } catch (err: any) {
-    const message = err?.message ?? "Unexpected error";
-    return new Response(message, { status: 500 });
+  } catch (err: unknown) {
+    console.error("Chat API error", err);
+    return new Response("Internal server error.", { status: 500 });
   }
 }
-
 
